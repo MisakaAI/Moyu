@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title>倒计时的尽头是什么？</title>
+    <style>
+        /* Gobold-Thin https://www.fonts.net.cn/font-18714274481.html */
+        @font-face {
+            font-family: 'Gobold-Thin';
+            src: url("Gobold-Thin.ttf");
+        }
+
+        /* 禹卫书法行书简体 https://www.fonts.net.cn/font-31851788386.html */
+        @font-face {
+            font-family: 'YuWeiShuFaXingShuJianTi';
+            src: url("YuWeiShuFaXingShuJianTi-1.ttf");
+        }
+
+        /* PUTHIAfont https://www.mianfeiziti.com/thread-203447.htm */
+        @font-face {
+            font-family: 'PUTHIAfont';
+            src: url("PUTHIAfont.ttf");
+        }
+
+        /* 优设标题黑 https://www.fonts.net.cn/font-38213257557.html */
+        @font-face {
+            font-family: 'YouSheBiaoTiHei';
+            src: url("YouSheBiaoTiHei-2.ttf");
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0;
+            color: #333;
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            border-left: solid 18px #be2e2e;
+            padding-left: 80px;
+        }
+
+        .title {
+            font-size: 6em;
+            font-family: "YuWeiShuFaXingShuJianTi";
+        }
+
+        .title_sub {
+            font-size: 2em;
+            font-weight: bold;
+            font-family: "Gobold-Thin";
+        }
+
+        .title_sub_day {
+            color: #be2e2e;
+        }
+
+        .unit {
+            font-family: 'YouSheBiaoTiHei';
+            font-size: 0.3em;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+        }
+
+        .countdown {
+            font-family: 'PUTHIAfont';
+            font-size: 12em;
+            display: flex;
+            display: -webkit-flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="box">
+            <div class="title">距离下次发<span style="color: #be2e2e;">工资</span>还有</div>
+            <div class="title_sub">THERE ARE <span class="title_sub_day">0</span> DAYS TO NEXT PAYDAY</div>
+            <div class="countdown">
+                <span class="day">00</span><div class="unit">天</div>
+                <span class="hour">00</span><div class="unit">时</div>
+                <span class="minute">00</span><div class="unit">分</div>
+                <span class="second">00</span><div class="unit">秒</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var day = document.querySelector(".day");
+    var hour = document.querySelector(".hour");
+    var minute = document.querySelector(".minute");
+    var second = document.querySelector(".second");
+    var title_sub_day = document.querySelector(".title_sub_day");
+
+    // 定时器，每秒执行一次
+    setInterval(countDown, 1000);
+
+    function countDown() {
+        // 获取当前时间的时间戳（单位毫秒）
+        var now_time = new Date();
+
+        // 如果大于10号，则判定为下个月，否则为本月。
+        if (now_time.getDay() > 10) {
+            var next_month = now_time.getMonth() + 2
+        } else {
+            var next_month = now_time.getMonth() + 1
+        }
+
+        // 如果下个月是13月，则修改为次年1月
+        if (next_month == 13) {
+            var next_month = 1
+            var next_year = now_time.getFullYear() + 1
+        } else {
+            var next_year = now_time.getFullYear()
+        }
+
+        // 判定时间为 10号 17点30分
+        var next_time = new Date(next_year + '-' + next_month + '-10 17:30:00');
+
+        // 把剩余时间毫秒数转化为秒
+        var times = (next_time - now_time) / 1000;
+        // 计算天数 转化为整数
+        var d = parseInt(times / 60 / 60 / 24);
+        // 赋值到 html 页面
+        day.innerHTML = d;
+        title_sub_day.innerHTML = d;
+        // 计算小时
+        var h = parseInt(times / 60 / 60 % 24);
+        // 如果小时数小于 10，要变成 0 + 数字的形式 然后赋值
+        hour.innerHTML = h < 10 ? "0" + h : h;
+        // 计算分钟 并赋值
+        var m = parseInt(times / 60 % 60);
+        minute.innerHTML = m < 10 ? "0" + m : m;
+        // 计算秒 并赋值
+        var s = parseInt(times % 60);
+        second.innerHTML = s < 10 ? "0" + s : s;
+    }
+
+    // 先执行一次，防止 1 秒之后才开始计时
+    countDown()
+</script>
+
+</html>
