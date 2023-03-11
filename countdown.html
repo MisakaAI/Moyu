@@ -119,10 +119,14 @@
         var now_time = new Date();
 
         // 如果大于10号，则判定为下个月，否则为本月。
-        if (now_time.getDay() > 10) {
+        if (now_time.getDate() > 10) {
             var next_month = now_time.getMonth() + 2
         } else {
-            var next_month = now_time.getMonth() + 1
+            if (now_time.getHours() > 17 && now_time.getMinutes() > 30) {
+                var next_month = now_time.getMonth() + 2
+            } else {
+                var next_month = now_time.getMonth() + 1
+            }
         }
 
         // 如果下个月是13月，则修改为次年1月
